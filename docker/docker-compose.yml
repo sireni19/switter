@@ -1,0 +1,10 @@
+version: '3'
+services:
+  postgres-switter:
+    image: postgres:13.3
+    environment:
+      - POSTGRES_USER=dbuser
+      - POSTGRES_PASSWORD=dbpassword
+      - POSTGRES_DB=switter-db
+    ports:
+      - '5430:5432'
