@@ -6,7 +6,10 @@ import by.prokopovich.switter.security.model.UserAccount;
 import by.prokopovich.switter.security.repository.UserAccountRepository;
 import by.prokopovich.switter.security.service.UserAccountService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -22,5 +25,10 @@ public class UserAccountServiceImpl implements UserAccountService {
         }
         UserAccount account = mapper.map(dto);
         userAccountRepository.save(account);
+    }
+
+    @Override
+    public Optional<UserDetails> findUserByUsername(String username) {
+        return userAccountRepository.findByUsername(username);
     }
 }
