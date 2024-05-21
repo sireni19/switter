@@ -25,7 +25,6 @@ import java.util.Set;
 @Setter
 @Builder
 @AllArgsConstructor
-
 public class UserAccount implements UserDetails {
 
     @Id

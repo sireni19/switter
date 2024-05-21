@@ -15,4 +15,7 @@ public interface UserAccountRepository extends JpaRepository<UserAccount,Long> {
      */
     @EntityGraph(attributePaths = "authorities")
     Optional<UserDetails> findByUsername(String username);
+
+    @EntityGraph(attributePaths = "authorities")
+    Optional<UserAccount> getUserAccountByUsername(String username);
 }
