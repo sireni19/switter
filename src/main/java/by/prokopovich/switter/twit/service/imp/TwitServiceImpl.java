@@ -1,26 +1,54 @@
 package by.prokopovich.switter.twit.service.imp;
 
+import by.prokopovich.switter.twit.mapper.TwitEditRequestToTwitMapper;
 import by.prokopovich.switter.twit.mapper.TwitRequestDtoToTwitImpl;
 import by.prokopovich.switter.twit.mapper.TwitToResponseDtoMapper;
+import by.prokopovich.switter.twit.mapper.TwitToTwitResponseDtoMapper;
 import by.prokopovich.switter.twit.model.Twit;
 import by.prokopovich.switter.twit.repository.TwitRepository;
 import by.prokopovich.switter.twit.service.TwitService;
+import by.prokopovich.switter.twit.web.dto.TwitEditRequest;
 import by.prokopovich.switter.twit.web.dto.TwitRequestDto;
 import by.prokopovich.switter.twit.web.dto.TwitResponseDto;
+import by.prokopovich.switter.user.profile.api.CurrentUserProfileApiService;
+import by.prokopovich.switter.user.profile.model.UserProfile;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
 public class TwitServiceImpl implements TwitService {
     private final TwitRequestDtoToTwitImpl mapperToTwit;
-    private final TwitRepository repository;
-    private final TwitToResponseDtoMapper mapperToDtoResponse;
+    private final TwitRepository twitRepository;
+    private final TwitToTwitResponseDtoMapper mapperToDtoResponse;
+    private final TwitEditRequestToTwitMapper editRequestToTwitMapper;
+    private final CurrentUserProfileApiService currentUserProfileApiService;
 
     @Override
     public TwitResponseDto createTwit(TwitRequestDto dto) {
         Twit twit = mapperToTwit.map(dto);
-        Twit saved = repository.save(twit);
+        Twit saved = twitRepository.save(twit);
         return mapperToDtoResponse.map(saved);
+    }
+    @Transactional
+    @Modifying
+    @Override
+    public TwitResponseDto editTwit(TwitEditRequest editRequest) {
+        UserProfile actor = currentUserProfileApiService.currentUserProfile();
+        UserProfile owner = twitRepository.findById(editRequest.getId()).map(Twit::getUserProfile).orElseThrow(() -> {
+            String errorMessage = String.format("Твит с id =%d не существует", editRequest.getId());
+            return new RuntimeException(errorMessage);
+        });
+        if (!actor.equals(owner)) {
+            String errorMessage = String.format("Редактирование твита с id = %d запрещено. " +
+                    "Пользователь %s не является его владельцем", editRequest.getId(), actor.getNickname());
+            throw new RuntimeException(errorMessage);
+        }
+        Twit updated = editRequestToTwitMapper.map(editRequest);
+        System.out.println(updated);
+        twitRepository.updateMessageById(updated.getMessage(),updated.getId());
+        return mapperToDtoResponse.map(updated);
     }
 }
