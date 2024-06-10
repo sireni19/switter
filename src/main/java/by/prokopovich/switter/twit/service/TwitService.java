@@ -8,8 +8,12 @@ import by.prokopovich.switter.twit.web.dto.TwitResponseDto;
 import java.util.Optional;
 
 public interface TwitService {
+    Twit findTwitById(Long id);
+
     TwitResponseDto createTwit(TwitRequestDto twit);
 
     TwitResponseDto editTwit(TwitEditRequest edit);
+
+    void deleteTwit(Long id);
 
 }
