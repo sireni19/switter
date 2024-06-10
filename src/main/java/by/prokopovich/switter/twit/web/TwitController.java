@@ -19,6 +19,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/v1/twits")
 @RequiredArgsConstructor
@@ -48,6 +52,12 @@ public class TwitController {
     @ResponseStatus(HttpStatus.OK)
     public void deleteTwit(@PathVariable Long twitId) {
         twitService.deleteTwit(twitId);
+    }
+
+    @GetMapping()
+    @ResponseStatus(HttpStatus.OK)
+    public Collection<TwitResponseDto> getAllTwits(){
+        return twitService.findTwits();
     }
 }
 

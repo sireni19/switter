@@ -2,7 +2,6 @@ package by.prokopovich.switter.twit.service.imp;
 
 import by.prokopovich.switter.twit.mapper.TwitEditRequestToTwitMapper;
 import by.prokopovich.switter.twit.mapper.TwitRequestDtoToTwitImpl;
-import by.prokopovich.switter.twit.mapper.TwitToResponseDtoMapper;
 import by.prokopovich.switter.twit.mapper.TwitToTwitResponseDtoMapper;
 import by.prokopovich.switter.twit.model.Twit;
 import by.prokopovich.switter.twit.repository.TwitRepository;
@@ -16,6 +15,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Collection;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -72,4 +74,13 @@ public class TwitServiceImpl implements TwitService {
         }
         twitRepository.deleteById(id);
     }
+
+    @Override
+    public Collection<TwitResponseDto> findTwits() {
+        UserProfile owner = currentUserProfileApiService.currentUserProfile();
+        Collection<Twit> twits = twitRepository.findAllByUserProfile(owner);
+        return twits.stream().map(mapperToDtoResponse::map).toList();
+
+    }
+
 }
