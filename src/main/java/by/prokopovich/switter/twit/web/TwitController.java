@@ -3,9 +3,11 @@ package by.prokopovich.switter.twit.web;
 import by.prokopovich.switter.twit.model.Twit;
 import by.prokopovich.switter.twit.service.TwitService;
 import by.prokopovich.switter.twit.web.dto.TwitEditRequest;
+import by.prokopovich.switter.twit.web.dto.TwitFindRequest;
 import by.prokopovich.switter.twit.web.dto.TwitRequestDto;
 import by.prokopovich.switter.twit.web.dto.TwitResponseDto;
 import jakarta.validation.Valid;
+import jakarta.websocket.server.PathParam;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -19,9 +21,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/twits")
@@ -56,8 +56,9 @@ public class TwitController {
 
     @GetMapping()
     @ResponseStatus(HttpStatus.OK)
-    public Collection<TwitResponseDto> getAllTwits(){
-        return twitService.findTwits();
+    public Collection<TwitResponseDto> findOwnerTwits(@PathParam("page") int page, @PathParam("limit") int limit) {
+        TwitFindRequest request = new TwitFindRequest(page, limit);
+        return twitService.findTwits(request);
     }
 }
 

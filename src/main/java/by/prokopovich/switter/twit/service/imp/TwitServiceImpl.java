@@ -7,17 +7,24 @@ import by.prokopovich.switter.twit.model.Twit;
 import by.prokopovich.switter.twit.repository.TwitRepository;
 import by.prokopovich.switter.twit.service.TwitService;
 import by.prokopovich.switter.twit.web.dto.TwitEditRequest;
+import by.prokopovich.switter.twit.web.dto.TwitFindRequest;
 import by.prokopovich.switter.twit.web.dto.TwitRequestDto;
 import by.prokopovich.switter.twit.web.dto.TwitResponseDto;
 import by.prokopovich.switter.user.profile.api.CurrentUserProfileApiService;
 import by.prokopovich.switter.user.profile.model.UserProfile;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.annotation.Validated;
 
 import java.util.Collection;
-import java.util.List;
+
+import static by.prokopovich.switter.twit.model.Twit_.CREATED_AT;
 
 @Service
 @RequiredArgsConstructor
@@ -76,11 +83,12 @@ public class TwitServiceImpl implements TwitService {
     }
 
     @Override
-    public Collection<TwitResponseDto> findTwits() {
+    public Collection<TwitResponseDto> findTwits(TwitFindRequest findRequest) {
         UserProfile owner = currentUserProfileApiService.currentUserProfile();
-        Collection<Twit> twits = twitRepository.findAllByUserProfile(owner);
+        Sort sort= Sort.by(Sort.Direction.DESC,CREATED_AT);
+        Pageable pageable = PageRequest.of(findRequest.page(), findRequest.limit(),sort);
+        Collection<Twit> twits = twitRepository.findAllByUserProfile(owner,pageable);
         return twits.stream().map(mapperToDtoResponse::map).toList();
-
     }
 
 }
