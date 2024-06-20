@@ -8,6 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 @Entity
 @Table(schema = "switter", name = "user_profiles")
@@ -15,6 +16,7 @@ import lombok.Setter;
 @Setter
 @Builder
 @AllArgsConstructor
+@ToString
 public class UserProfile {
 
     @Id

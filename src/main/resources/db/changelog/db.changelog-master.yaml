@@ -7,3 +7,5 @@ databaseChangeLog:
       file: db/changelog/0.0.1/changelog-create-switter-user_profiles-table.sql
   - include:
       file: db/changelog/0.0.1/changelog-create-switter-twits-table.sql
+  - include:
+      file: db/changelog/0.0.1/changelog-create-switter-subscriptions-table.sql
