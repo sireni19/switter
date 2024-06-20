@@ -5,8 +5,12 @@ spring:
     password: dbpassword
     driver-class-name: org.postgresql.Driver
   jpa:
+    show-sql: true
     properties:
       hibernate.jdbc.time_zone: UTC
+      hibernate.show-sql: true
+      hibernate.format_sql: true
+
 logging:
   level:
     org:

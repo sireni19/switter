@@ -2,13 +2,16 @@ package by.prokopovich.switter.twit.service;
 
 import by.prokopovich.switter.twit.model.Twit;
 import by.prokopovich.switter.twit.web.dto.TwitEditRequest;
+import by.prokopovich.switter.twit.web.dto.TwitFindRequest;
+import by.prokopovich.switter.twit.web.dto.TwitPageResponseDto;
 import by.prokopovich.switter.twit.web.dto.TwitRequestDto;
 import by.prokopovich.switter.twit.web.dto.TwitResponseDto;
-import by.prokopovich.switter.user.profile.model.UserProfile;
+import jakarta.validation.Valid;
+import org.springframework.data.domain.Pageable;
+import org.springframework.validation.annotation.Validated;
 
 import java.util.Collection;
-import java.util.Optional;
-
+@Validated
 public interface TwitService {
     Twit findTwitById(Long id);
 
@@ -18,6 +21,6 @@ public interface TwitService {
 
     void deleteTwit(Long id);
 
-    Collection<TwitResponseDto> findTwits();
+    TwitPageResponseDto findTwits(@Valid TwitFindRequest request);
 
 }
