@@ -8,12 +8,14 @@ import by.prokopovich.switter.twit.repository.TwitRepository;
 import by.prokopovich.switter.twit.service.TwitService;
 import by.prokopovich.switter.twit.web.dto.TwitEditRequest;
 import by.prokopovich.switter.twit.web.dto.TwitFindRequest;
+import by.prokopovich.switter.twit.web.dto.TwitPageResponseDto;
 import by.prokopovich.switter.twit.web.dto.TwitRequestDto;
 import by.prokopovich.switter.twit.web.dto.TwitResponseDto;
 import by.prokopovich.switter.user.profile.api.CurrentUserProfileApiService;
 import by.prokopovich.switter.user.profile.model.UserProfile;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -83,12 +85,13 @@ public class TwitServiceImpl implements TwitService {
     }
 
     @Override
-    public Collection<TwitResponseDto> findTwits(TwitFindRequest findRequest) {
+    public TwitPageResponseDto findTwits(TwitFindRequest findRequest) {
         UserProfile owner = currentUserProfileApiService.currentUserProfile();
-        Sort sort= Sort.by(Sort.Direction.DESC,CREATED_AT);
-        Pageable pageable = PageRequest.of(findRequest.page(), findRequest.limit(),sort);
-        Collection<Twit> twits = twitRepository.findAllByUserProfile(owner,pageable);
-        return twits.stream().map(mapperToDtoResponse::map).toList();
+        Sort sort = Sort.by(Sort.Direction.DESC, CREATED_AT);
+        Pageable pageable = PageRequest.of(findRequest.page(), findRequest.limit(), sort);
+        Page<Twit> twits = twitRepository.findAllByUserProfile(owner, pageable);
+        Collection<TwitResponseDto> responseDtos = twits.stream().map(mapperToDtoResponse::map).toList();
+        return new TwitPageResponseDto(twits.getTotalElements(), twits.isFirst(), twits.isLast(), responseDtos);
     }
 
 }

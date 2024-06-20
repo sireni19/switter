@@ -4,6 +4,7 @@ import by.prokopovich.switter.twit.model.Twit;
 import by.prokopovich.switter.twit.service.TwitService;
 import by.prokopovich.switter.twit.web.dto.TwitEditRequest;
 import by.prokopovich.switter.twit.web.dto.TwitFindRequest;
+import by.prokopovich.switter.twit.web.dto.TwitPageResponseDto;
 import by.prokopovich.switter.twit.web.dto.TwitRequestDto;
 import by.prokopovich.switter.twit.web.dto.TwitResponseDto;
 import jakarta.validation.Valid;
@@ -56,7 +57,7 @@ public class TwitController {
 
     @GetMapping()
     @ResponseStatus(HttpStatus.OK)
-    public Collection<TwitResponseDto> findOwnerTwits(@PathParam("page") int page, @PathParam("limit") int limit) {
+    public TwitPageResponseDto findOwnerTwits(@PathParam("page") int page, @PathParam("limit") int limit) {
         TwitFindRequest request = new TwitFindRequest(page, limit);
         return twitService.findTwits(request);
     }

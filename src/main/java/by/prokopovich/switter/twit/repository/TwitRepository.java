@@ -2,6 +2,7 @@ package by.prokopovich.switter.twit.repository;
 
 import by.prokopovich.switter.twit.model.Twit;
 import by.prokopovich.switter.user.profile.model.UserProfile;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -20,6 +21,6 @@ public interface TwitRepository extends CrudRepository<Twit, Long> {
     @Query("UPDATE Twit SET message=:message, modifiedAt = CURRENT_TIMESTAMP WHERE id = :id")
     void updateMessageById(String message, Long id);
 
-    List<Twit> findAllByUserProfile(UserProfile userProfile, Pageable pageable);
+    Page<Twit> findAllByUserProfile(UserProfile userProfile, Pageable pageable);
 
 }
