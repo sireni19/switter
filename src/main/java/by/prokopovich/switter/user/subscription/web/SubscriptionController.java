@@ -16,12 +16,11 @@ public class SubscriptionController {
     private final SubscriptionService subscriptionService;
 
     @PostMapping("/subscribe")
-    public void subscribe(@Valid @RequestBody final SubscriptionRequest request) {
-        System.out.println(request);
+    public void subscribe(@Valid @RequestBody SubscriptionRequest request) {
         subscriptionService.subscribe(request);
     }
     @PostMapping("/unsubscribe")
-    public void unsubscribe(@Valid @RequestBody final UnsubscribeRequest request) {
+    public void unsubscribe(@Valid @RequestBody UnsubscribeRequest request) {
         subscriptionService.unsubscribe(request);
     }
 }

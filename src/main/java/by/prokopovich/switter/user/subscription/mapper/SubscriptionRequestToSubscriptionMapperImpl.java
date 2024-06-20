@@ -4,6 +4,7 @@ import by.prokopovich.switter.user.profile.api.CurrentUserProfileApiService;
 import by.prokopovich.switter.user.profile.service.UserProfileService;
 import by.prokopovich.switter.user.subscription.model.Subscription;
 import by.prokopovich.switter.user.subscription.web.SubscriptionRequest;
+import by.prokopovich.switter.user.subscription.web.UnsubscribeRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -15,9 +16,16 @@ public class SubscriptionRequestToSubscriptionMapperImpl implements Subscription
 
     @Override
     public Subscription map(SubscriptionRequest source) {
-      Subscription subscription=new Subscription();
+      Subscription subscription=new Subscription();;
       subscription.setFollower(currentUserProfileApiService.currentUserProfile());
-      subscription.setFollowed(userProfileService.findUserProfileById((source.getFollowedId())).get());
+      subscription.setFollowed(userProfileService.findUserProfileById(source.getFollowedId()).get());
       return subscription;
+    }
+    @Override
+    public Subscription map(UnsubscribeRequest source){
+        Subscription subscription=new Subscription();
+        subscription.setFollower(currentUserProfileApiService.currentUserProfile());
+        subscription.setFollowed(userProfileService.findUserProfileById(source.getUnfollowedId()).get());
+        return subscription;
     }
 }
